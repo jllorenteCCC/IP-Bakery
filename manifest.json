@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "IP Bakery",
+  "version": "1.0",
+  "description": "A tool for managing and querying IP addresses.",
+  "action": {
+    "default_icon": {
+      "16": "Images/Furnace.png",
+      "32": "Images/Furnace.png",
+      "48": "Images/Furnace.png",
+      "128": "Images/Furnace.png"
+    }
+  },
+  "host_permissions": [
+    "https://*.tile.openstreetmap.org/*",
+    "https://api.abuseipdb.com/*",
+    "http://ip-api.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "libs/leaflet/*",
+        "libs/leaflet/images/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "Images/Furnace.png",
+    "32": "Images/Furnace.png",
+    "48": "Images/Furnace.png",
+    "128": "Images/Furnace.png"
+  },
+  "permissions": [
+    "storage",
+    "clipboardWrite",
+    "system.display"
+  ]
+}
+

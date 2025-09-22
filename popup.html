@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<link href="https://fonts.googleapis.com/css2?family=Soleil:wght@400;600;700&family=Zilla+Slab&display=swap"
+    rel="stylesheet">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>IP Bakery</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <header>
+        <h1>IP Bakery</h1>
+        <nav class="top-tabs">
+            <a href="popup.html" class="tab active">IP Batch</a>
+            <a href="csv.html" class="tab">Csv processor</a>
+
+        </nav>
+
+        <div class="header-controls">
+            <img src="Images/Furnace.png" alt="CCCLogo">
+            <div class="darkmode-toggle">
+                <!-- Sun -->
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px"
+                    fill="white">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="4" stroke="white" stroke-width="2" />
+                    <line x1="12" y1="20" x2="12" y2="23" stroke="white" stroke-width="2" />
+                    <line x1="1" y1="12" x2="4" y2="12" stroke="white" stroke-width="2" />
+                    <line x1="20" y1="12" x2="23" y2="12" stroke="white" stroke-width="2" />
+                    <line x1="4.2" y1="4.2" x2="6.3" y2="6.3" stroke="white" stroke-width="2" />
+                    <line x1="17.7" y1="17.7" x2="19.8" y2="19.8" stroke="white" stroke-width="2" />
+                    <line x1="4.2" y1="19.8" x2="6.3" y2="17.7" stroke="white" stroke-width="2" />
+                    <line x1="17.7" y1="6.3" x2="19.8" y2="4.2" stroke="white" stroke-width="2" />
+                </svg>
+
+                <!-- Switch -->
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                </label>
+
+                <!-- Moon -->
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px"
+                    height="18px">
+                    <path
+                        d="M12 2a9.931 9.931 0 0 0-7.07 2.93C7.34 6.34 9 9.02 9 12s-1.66 5.66-4.07 7.07A10 10 0 1 0 12 2z" />
+                </svg>
+            </div>
+        </div>
+    </header>
+
+
+
+
+    <form id="lookupForm">
+        <label>API Key:</label><br>
+        <input type="text" id="apiKey" placeholder="Introduce your API Key" required><br><br>
+
+        <label>IP Address:</label><br>
+        <textarea id="ipList" rows="6" cols="60" placeholder="Ex: 8.8.8.8"></textarea><br><br>
+
+        <button type="submit">Check</button>
+        <span id="checkUsage" style="margin-left:10px; font-weight:bold; color:#004085;">- / -</span>
+
+    </form>
+    <!-- Loader -->
+    <div id="loader" style="display:none; text-align:center; margin-top:10px;">
+        <div class="spinner"></div>
+    </div>
+
+
+    <hr>
+
+    <h2 style="text-align:center;">Results</h2>
+
+    <!-- Filter -->
+    <div id="filterSection">
+        <label><b>Filter by:</b></label>
+        <select id="filterColumn">
+            <option value="">-- Select Column --</option>
+            <option value="0">IP Address</option>
+            <option value="1">Abuse Confidence Score</option>
+            <option value="2">Total Reports</option>
+            <option value="3">Last Reported</option>
+            <option value="4">ISP</option>
+            <option value="5">Usage Type</option>
+            <option value="6">Country</option>
+            <option value="7">City</option>
+            <option value="8">ASN</option>
+            <option value="9">Hostname(s)</option>
+            <option value="10">Domain Name</option>
+        </select>
+
+        <div id="filterOptions" style="margin-top:10px;"></div>
+
+        <!-- Hidden buttons until finishing the query -->
+        <div id="filterActions"
+            style="display:none; align-items:center; gap:15px; justify-content:center; margin-top:10px;">
+            <button id="applyFilter">Apply</button>
+            <span id="copyFiltered" style="display:none; color:#004085; text-decoration:underline; cursor:pointer;">
+                Copy filtered IPs
+            </span>
+        </div>
+    </div>
+
+    <div id="summaryBox" class="summary-box" style="display:none;"></div>
+
+
+    <table id="resultsTable" border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>IP Address</th>
+                <th>Abuse Confidence Score</th>
+                <th>Total Reports (Last 365 days)</th>
+                <th>Last Reported</th>
+                <th>ISP</th>
+                <th>Usage Type</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>ASN</th>
+                <th>Hostname(s)</th>
+                <th>Domain Name</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="actions">
+        <button id="openMap" class="icon-btn" title="Open map">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path
+                    d="M12 2a6 6 0 0 0-6 6c0 4.5 6 12 6 12s6-7.5 6-12a6 6 0 0 0-6-6zm0 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+            </svg>
+        </button>
+
+        <button id="downloadCsv">Download CSV</button>
+    </div>
+
+
+    <div id="mapContainer"
+        style="display:none; width:95%; height:500px; margin:20px auto; border:2px solid #004085; border-radius:8px;">
+    </div>
+
+
+    <script src="popup.js"></script>
+    <link rel="stylesheet" href="libs/leaflet/leaflet.css">
+    <script src="libs/leaflet/leaflet.js"></script>
+    <script src="libs/topojson/topojson-client.min.js"></script>
+    <script src="darkmode.js"></script>
+
+</body>
+
+</html>

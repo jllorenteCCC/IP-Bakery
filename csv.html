@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Processor</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body class="csv">
+
+    <header>
+        <h1>IP Bakery</h1>
+        <nav class="top-tabs">
+            <a href="popup.html" class="tab">IP Batch</a>
+            <a href="csv.html" class="tab active">CSV Processor</a>
+        </nav>
+
+        <div class="header-controls">
+            <img src="Images/Furnace.png" alt="CCCLogo">
+            <div class="darkmode-toggle">
+                <!-- Sun -->
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px"
+                    fill="white">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="4" stroke="white" stroke-width="2" />
+                    <line x1="12" y1="20" x2="12" y2="23" stroke="white" stroke-width="2" />
+                    <line x1="1" y1="12" x2="4" y2="12" stroke="white" stroke-width="2" />
+                    <line x1="20" y1="12" x2="23" y2="12" stroke="white" stroke-width="2" />
+                    <line x1="4.2" y1="4.2" x2="6.3" y2="6.3" stroke="white" stroke-width="2" />
+                    <line x1="17.7" y1="17.7" x2="19.8" y2="19.8" stroke="white" stroke-width="2" />
+                    <line x1="4.2" y1="19.8" x2="6.3" y2="17.7" stroke="white" stroke-width="2" />
+                    <line x1="17.7" y1="6.3" x2="19.8" y2="4.2" stroke="white" stroke-width="2" />
+                </svg>
+
+                <!-- Switch -->
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                </label>
+
+                <!-- Moon -->
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px"
+                    height="18px">
+                    <path
+                        d="M12 2a9.931 9.931 0 0 0-7.07 2.93C7.34 6.34 9 9.02 9 12s-1.66 5.66-4.07 7.07A10 10 0 1 0 12 2z" />
+                </svg>
+            </div>
+        </div>
+    </header>
+
+
+
+    <section id="csvUploadSection" class="actions" style="gap:12px; margin-top:10px;">
+        <button id="btnUploadCsv" style="margin-top: 15px;">Upload CSV</button>
+        <input type="file" id="fileCsv" accept=".csv,text/csv" style="display:none">
+    </section>
+
+    <div class="csv-table-wrapper">
+        <div class="csv-table-scroller">
+            <table id="csvTable" class="abuse-table">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="columnProcessor" style="display:none; text-align:center; margin:20px;">
+        <h3>Select column to process</h3>
+        <select id="columnSelect" style="margin-bottom:10px;"></select>
+        <div>
+            <button id="processColumnBtn" type="button">Process column</button>
+        </div>
+    </div>
+
+    <script src="csv.js"></script>
+</body>
+
+</html>
