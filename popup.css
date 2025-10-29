@@ -901,7 +901,6 @@ body.dark #csvTable td.expanded {
   gap: 10px;
 }
 
-/* ===== Hamburger button (stacked vertically) ===== */
 .hamburger {
   width: 34px;
   height: 34px;
@@ -910,11 +909,9 @@ body.dark #csvTable td.expanded {
   background: transparent;
   display: inline-flex;
   flex-direction: column;
-  /* <-- apila en vertical */
   align-items: center;
   justify-content: center;
   gap: 4px;
-  /* separación entre líneas */
   cursor: pointer;
   padding: 0;
   line-height: 0;
@@ -933,11 +930,9 @@ body.dark #csvTable td.expanded {
 }
 
 
-/* ===== Side menu (dropdown-like) ===== */
 .side-menu {
   position: absolute;
   top: 56px;
-  /* debajo del header */
   left: 10px;
   background: #ffffff;
   color: #222;
@@ -961,7 +956,6 @@ body.dark #csvTable td.expanded {
   background: rgba(0, 0, 0, 0.06);
 }
 
-/* Dark mode for menu */
 body.dark .side-menu {
   background: #1c1c1c;
   color: #e0e0e0;
@@ -990,7 +984,6 @@ body.dark .card {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* ===== Simple modal for invalid whitelist ===== */
 .modal {
   position: fixed;
   inset: 0;
@@ -1001,7 +994,6 @@ body.dark .card {
 
 .modal__dialog {
   position: relative;
-  /* necesario para posicionar la X */
   background: #fff;
   border-radius: 10px;
   max-width: 520px;
@@ -1018,7 +1010,6 @@ body.dark .card {
   justify-content: space-between;
   gap: 8px;
   margin: 0 24px 8px 0;
-  /* deja hueco para la X */
 }
 
 .modal__body {
@@ -1079,7 +1070,6 @@ body.dark .modal__close {
 
 
 
-/* Evita scrolls inesperados en nodos internos */
 .abuse-table,
 .abuse-table thead,
 .abuse-table tbody {
@@ -1125,7 +1115,7 @@ body.dark .table-controls .page-size select {
 .pager {
   display: flex;
   align-items: center;
-  gap: 14px;                        /* separación entre info y acciones */
+  gap: 14px;                        
 }
 
 .page-info {
@@ -1156,15 +1146,13 @@ body.dark .pager-link { color: #cfe2ff; }
 
 
 
-/* nos aseguramos de que los controles NO se “peguen” dentro del scroller */
 .table-controls { position: static; margin-top: 8px; }
 
 
-/* === Tabla con header sticky y UN solo scrollbar === */
 .csv-table-wrapper {
   position: relative;
   overflow: visible;
-  margin-bottom: 12px;            /* separa tabla de controles */
+  margin-bottom: 12px;            
 }
 
 .csv-table-scroller {
@@ -1175,8 +1163,8 @@ body.dark .pager-link { color: #cfe2ff; }
   border: 2px solid #004085;
   border-radius: 10px;
   background: #fff;
-  position: relative;             /* crea su propio contexto */
-  z-index: 0;                     /* por debajo de los controles */
+  position: relative;             
+  z-index: 0;                     
   padding: 0;
 }
 
@@ -1189,16 +1177,15 @@ body.dark .pager-link { color: #cfe2ff; }
 }
 .abuse-table thead, .abuse-table tbody { overflow: visible; }
 
-/* sticky en THEAD (no en cada TH) */
 .abuse-table thead {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: #eaf2fb;            /* fondo sólido para que no se vea el cuerpo al pasar */
+  background: #eaf2fb;            
   border-bottom: 1px solid #004085;
 }
 .abuse-table thead th {
-  position: static;               /* importante: sin sticky individual */
+  position: static;              
   color: #0b3c7a;
   font-weight: 700;
   padding: 8px 10px;
@@ -1220,13 +1207,12 @@ body.dark .pager-link { color: #cfe2ff; }
 .abuse-table tbody tr:nth-child(odd) td { background: #f8fbff; }
 .abuse-table tbody tr:hover td { background: #eef5ff; }
 
-/* === Controles SIEMPRE fuera y por encima del scroller === */
 .table-controls {
-  position: relative;             /* crea stacking context propio */
-  z-index: 3;                     /* por ENCIMA del scroller */
+  position: relative;            
+  z-index: 3;                     
   display: flex;
   align-items: center;
-  justify-content: space-between; /* izq: selector / dcha: info + pager */
+  justify-content: space-between; 
   gap: 16px;
   margin: 8px 4px 0 4px;
 }

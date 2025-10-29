@@ -1,8 +1,3 @@
-// login.js — Login Processor with persistence, safe CSV parsing, whitelist validation,
-// and guarded "Process" button until both CSVs are valid.
-// Comments in English (as requested).
-
-// ================= CSV parsing (auto-delimiter + quote-aware) =================
 function detectDelimiter(text) {
   const firstLine = (text.split(/\r?\n/)[0] || "");
   const counts = {
@@ -18,7 +13,6 @@ function detectDelimiter(text) {
   return best;
 }
 
-// Fix: if the delimiter right after the IP is missing in some rows, insert it.
 function preFixMissingDelimiterAfterIP(text, delim) {
   const lines = text.replace(/\r\n?/g, "\n").split("\n");
   if (lines.length <= 1) return text;
@@ -118,19 +112,17 @@ function isValidIPv6(ip) {
 }
 
 // ================= State =================
-let whitelistItems = [];        // raw strings (IPs or CIDR)
-let whitelistCIDRs = [];        // [{start,end}]
-let whitelistIPs = new Set();   // exact IPs (IPv4/IPv6)
+let whitelistItems = [];        
+let whitelistCIDRs = [];        
+let whitelistIPs = new Set();   
 let loginHeaders = [];
-let loginRows = [];             // rows without header
+let loginRows = [];            
 
 
-// Pagination state
-let resultRows = [];   // rows que se están mostrando (filtradas)
+let resultRows = [];   
 let pageSize = 10;
 let currentPage = 1;
 
-// DOM de paginación
 const pageSizeSelect = document.getElementById("pageSizeSelect");
 const pageInfoEl     = document.getElementById("pageInfo");
 const firstPageLink  = document.getElementById("firstPage");
@@ -139,7 +131,6 @@ const nextPageLink   = document.getElementById("nextPage");
 const lastPageLink   = document.getElementById("lastPage");
 
 
-// Validity flags
 let whitelistValid = false;
 let loginsValid = false;
 
@@ -158,7 +149,6 @@ const resultsTable = document.getElementById("loginResultsTable");
 const thead = resultsTable.querySelector("thead tr");
 const tbody = resultsTable.querySelector("tbody");
 
-// Modal for invalid whitelist entries
 const modal = document.getElementById("invalidWhitelistModal");
 const modalList = document.getElementById("invalidWhitelistList");
 const modalClose = document.getElementById("invalidWhitelistClose");
@@ -189,7 +179,6 @@ function renderTableHeader(headers) {
 function renderTableBody(rows) {
   tbody.innerHTML = "";
 
-  // Guardamos la lista completa de resultados (para paginar)
   resultRows = Array.isArray(rows) ? rows.slice() : [];
 
   const total = resultRows.length;
@@ -225,7 +214,6 @@ function renderTableBody(rows) {
     });
   }
 
-  // Actualiza info y botones
   updatePagerUI();
 }
 
@@ -241,7 +229,6 @@ function updatePagerUI() {
 
   pageInfoEl.textContent = `Página ${currentPage} de ${pageCount} (${totalRows} filas) — mostrando ${showingFrom}–${showingTo}`;
 
-  // Habilitar/Deshabilitar “botones texto”
   const atFirst = currentPage <= 1;
   const atLast  = currentPage >= pageCount;
 
@@ -276,7 +263,6 @@ function changePageSize(n) {
   persistPageState();
 }
 
-// Persist pageSize & currentPage with results
 function persistPageState() {
   chrome?.storage?.local?.set?.({
     loginResultsPageSize: pageSize,
@@ -289,8 +275,8 @@ function persistPageState() {
 function showResults(headers, rows) {
   loginHeaders = headers.slice();
   renderTableHeader(loginHeaders);
-  currentPage = 1;        // empezar siempre por la primera
-  renderTableBody(rows);  // esto setea resultRows internamente
+  currentPage = 1;        
+  renderTableBody(rows);  
   resultsSection.style.display = "block";
 }
 
@@ -318,7 +304,6 @@ function clearResults() {
 }
 
 
-// Header normalization + finder
 function normHeader(h) {
   return String(h || "").toLowerCase().replace(/[\s_\-()]/g, "");
 }
@@ -329,7 +314,6 @@ function findSourceCol(headers) {
   });
 }
 
-// Enable/disable Process button depending on validity
 function updateProcessAvailability() {
   const ok = whitelistValid && loginsValid;
   btnProcess.disabled = !ok;
@@ -348,7 +332,6 @@ btnUploadLogins.addEventListener("click", () => {
   fileLogins.click();
 });
 
-// When CSV changes → clear current results until processed again
 fileWhitelist.addEventListener("change", () => {
   clearResults();
   const file = fileWhitelist.files && fileWhitelist.files[0];
@@ -360,19 +343,16 @@ fileWhitelist.addEventListener("change", () => {
       const text = String(reader.result || "");
       const rows = parseCSV(text);
 
-      // Expect a single-column CSV; if multiple columns, read first one.
       const colIndex = 0;
       const items = [];
       for (let r = 0; r < rows.length; r++) {
         const cellRaw = rows[r][colIndex];
         const cell = (cellRaw == null ? "" : String(cellRaw)).trim();
         if (!cell) continue;
-        // Skip header like "Allowed ips" (case-insensitive)
         if (r === 0 && /^allowed\s*ips$/i.test(cell)) continue;
         items.push(cell);
       }
 
-      // Validate + normalize whitelist
       const invalid = [];
       whitelistItems = items;
       whitelistIPs.clear();
@@ -386,7 +366,6 @@ fileWhitelist.addEventListener("change", () => {
           if (cidr) whitelistCIDRs.push(cidr);
           else invalid.push(s);
         } else {
-          // Accept IPv4 or IPv6 exact matches
           if (isValidIPv4(s) || isValidIPv6(s)) {
             whitelistIPs.add(s);
           } else {
@@ -398,10 +377,8 @@ fileWhitelist.addEventListener("change", () => {
       whitelistInfo.textContent =
         `Whitelist loaded: ${items.length} entries (${whitelistIPs.size} exact IPs, ${whitelistCIDRs.length} CIDR blocks).`;
 
-      // Persist whitelist inputs for convenience
       chrome?.storage?.local?.set?.({ loginWhitelistItems: whitelistItems });
 
-      // Show popup if there are invalid entries
       if (invalid.length && modal && modalList) {
         modalList.innerHTML = "";
         invalid.forEach(bad => {
@@ -412,7 +389,6 @@ fileWhitelist.addEventListener("change", () => {
         modal.style.display = "block";
       }
 
-      // validity flag
       whitelistValid = (whitelistIPs.size + whitelistCIDRs.length) > 0 && invalid.length === 0;
       updateProcessAvailability();
 
@@ -445,7 +421,6 @@ fileLogins.addEventListener("change", () => {
       loginHeaders = rows[0];
       loginRows = rows.slice(1);
 
-      // Normalize all rows to header length
       const cols = loginHeaders.length;
       loginRows = loginRows.map(r => {
         const a = Array.isArray(r) ? r.slice() : [];
@@ -457,12 +432,10 @@ fileLogins.addEventListener("change", () => {
       loginsInfo.textContent =
         `Login CSV loaded: ${loginRows.length} rows, ${loginHeaders.length} columns.`;
 
-      // Validate presence of Source IP column
       const srcIdx = findSourceCol(loginHeaders);
       loginsValid = loginRows.length > 0 && srcIdx !== -1;
       updateProcessAvailability();
 
-      // Persist raw login CSV (headers + rows) for convenience
       chrome?.storage?.local?.set?.({ loginHeaders, loginRows });
 
     } catch (e) {
@@ -487,7 +460,6 @@ btnProcess.addEventListener("click", () => {
     return;
   }
 
-  // Filter rows: keep those NOT in whitelist
   const notAllowed = [];
   for (const row of loginRows) {
     const raw = row[sourceColIndex] ?? "";
@@ -496,13 +468,11 @@ btnProcess.addEventListener("click", () => {
     if (!isWhitelisted(ip)) notAllowed.push(row);
   }
 
-  // Show + persist results
   showResults(loginHeaders, notAllowed);
   persistResults(loginHeaders, notAllowed);
 });
 
 
-// Pagination controls
 if (pageSizeSelect) {
   pageSizeSelect.addEventListener("change", () => {
     const v = parseInt(pageSizeSelect.value, 10);
@@ -558,11 +528,9 @@ chrome?.storage?.local?.get?.(
       });
       whitelistInfo.textContent =
         `Whitelist loaded: ${whitelistItems.length} entries (${whitelistIPs.size} exact IPs, ${whitelistCIDRs.length} CIDR blocks).`;
-      // validity (if there were invalids previously, we still show them but do not block restoration of results)
       whitelistValid = (whitelistIPs.size + whitelistCIDRs.length) > 0 && invalid.length === 0;
     }
 
-    // Restore raw login CSV (optional info text)
     if (Array.isArray(data?.loginHeaders) && Array.isArray(data?.loginRows)) {
       loginHeaders = data.loginHeaders;
       loginRows = data.loginRows;
@@ -571,9 +539,7 @@ chrome?.storage?.local?.get?.(
       loginsValid = loginRows.length > 0 && findSourceCol(loginHeaders) !== -1;
     }
 
-    // Restore RESULTS (this is the important persistence)
     if (Array.isArray(data?.loginResultsHeaders) && Array.isArray(data?.loginResultsRows)) {
-      // Restaura page size / current page si existen
       if (Number.isInteger(data.loginResultsPageSize)) {
         pageSize = data.loginResultsPageSize;
         if (pageSizeSelect) pageSizeSelect.value = String(pageSize);
@@ -581,10 +547,9 @@ chrome?.storage?.local?.get?.(
       if (Number.isInteger(data.loginResultsCurrentPage)) {
         currentPage = Math.max(1, data.loginResultsCurrentPage);
       }
-      // Mostrar resultados con la página restaurada
       renderTableHeader(data.loginResultsHeaders);
       resultsSection.style.display = "block";
-      renderTableBody(data.loginResultsRows); // respetará currentPage y pageSize
+      renderTableBody(data.loginResultsRows); 
     }
 
 

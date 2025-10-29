@@ -8,34 +8,30 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.text();
     })
     .then((html) => {
-      // 1) Insert header
+      // Insert header
       document.body.insertAdjacentHTML("afterbegin", html);
 
-      // 2) Page context
       const path = (window.location.pathname.split("/").pop() || "").toLowerCase();
       const isLoginPage = path.includes("login.html");
       const isBatchPage = path.includes("popup.html") || path.includes("csv.html");
 
-      // 3) Mark active tab (only for popup/csv)
       const tabBatch = document.getElementById("tabBatch");
       const tabCsv   = document.getElementById("tabCsv");
       if (path.includes("popup.html") && tabBatch) tabBatch.classList.add("active");
       if (path.includes("csv.html")   && tabCsv)   tabCsv.classList.add("active");
 
-      // 4) Inject darkmode.js if not already present
       if (!document.querySelector('script[src="darkmode.js"]')) {
         const darkScript = document.createElement("script");
         darkScript.src = "darkmode.js";
         document.body.appendChild(darkScript);
       }
 
-      // 5) Adapt header tabs for login.html (only show Login Processor)
       const tabs = document.getElementById("mainTabs");
       if (tabs && isLoginPage) {
         tabs.innerHTML = '<a href="login.html" class="tab active" id="tabLogin">Login Processor</a>';
       }
 
-      // 6) Side menu (hamburger) wiring
+      // Side menu 
       const menuBtn  = document.getElementById("menuToggle");
       const sideMenu = document.getElementById("sideMenu");
 
@@ -72,15 +68,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // 7) Open-in-new-tab logic for menu items
+      // Open-in-new-tab logic for menu items
       const menuLogin = document.getElementById("menuLogin");
       const menuBatch = document.getElementById("menuBatch");
 
-      // Login Processor: open new tab only if NOT already on login.html
       if (menuLogin) {
         menuLogin.addEventListener("click", (e) => {
           e.preventDefault();
-          if (isLoginPage) { // already on login
+          if (isLoginPage) { 
             closeMenu();
             return;
           }
@@ -89,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // IP Batch: if on popup/csv, navigate in SAME tab to popup.html; otherwise open new tab
       if (menuBatch) {
         menuBatch.addEventListener("click", (e) => {
           e.preventDefault();
@@ -97,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!path.includes("popup.html")) {
               window.location.href = "popup.html";
             } else {
-              closeMenu(); // already there
+              closeMenu(); 
             }
             return;
           }

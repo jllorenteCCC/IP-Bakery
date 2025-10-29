@@ -7,7 +7,7 @@
     const columnSelect = document.getElementById("columnSelect");
     const processColumnBtn = document.getElementById("processColumnBtn");
 
-    // ========= Utilidades =========
+    // ========= Utilitiees =========
 
     function parseCSV(text) {
         const rows = [];
@@ -168,11 +168,10 @@
 
 
 
-// ========= Dark Mode Toggle (safe) =========
+// ========= Dark Mode Toggle =========
 function wireDarkToggle() {
     const darkToggle = document.getElementById("darkModeToggle");
-    if (!darkToggle) return; // header aún no insertado
-
+    if (!darkToggle) return;
     chrome.storage.local.get("darkMode", data => {
         if (data.darkMode) {
             document.body.classList.add("dark");
@@ -191,7 +190,6 @@ function wireDarkToggle() {
     });
 }
 
-// Intenta cablear ahora y también tras la inserción del header
 wireDarkToggle();
 document.addEventListener("DOMContentLoaded", wireDarkToggle);
 
