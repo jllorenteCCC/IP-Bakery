@@ -195,7 +195,7 @@ function renderTableBody(rows) {
     td.colSpan = loginHeaders.length;
     td.style.textAlign = "center";
     td.style.fontStyle = "italic";
-    td.textContent = "No se han encontrado intentos NO permitidos.";
+    td.textContent = "No unauthorized attempts found.";
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
@@ -227,7 +227,7 @@ function updatePagerUI() {
   const showingFrom = (totalRows === 0) ? 0 : (currentPage - 1) * pageSize + 1;
   const showingTo   = Math.min(currentPage * pageSize, totalRows);
 
-  pageInfoEl.textContent = `Página ${currentPage} de ${pageCount} (${totalRows} filas) — mostrando ${showingFrom}–${showingTo}`;
+  pageInfoEl.textContent = `Page ${currentPage} of ${pageCount} (${totalRows} rows) — showing ${showingFrom}–${showingTo}`;
 
   const atFirst = currentPage <= 1;
   const atLast  = currentPage >= pageCount;
