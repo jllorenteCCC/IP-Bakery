@@ -19,10 +19,14 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "libs/leaflet/*",
-        "libs/leaflet/images/*"
+        "header.html",
+        "darkmode.js",
+        "popup.css",
+        "Images/*"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "background": {
@@ -40,4 +44,3 @@
     "system.display"
   ]
 }
-

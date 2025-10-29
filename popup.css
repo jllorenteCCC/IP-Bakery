@@ -779,13 +779,7 @@ body.dark.csv #filterSection button:hover {
   filter: none;
 }
 
-.abuse-table {
-  width: 95%;
-  margin: 20px auto;
-  border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
-}
+
 
 .abuse-table tr:hover {
   background-color: #f1f8ff;
@@ -798,14 +792,6 @@ body.dark.csv #filterSection button:hover {
   text-align: left;
 }
 
-.abuse-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  text-align: left;
-  font-weight: 600;
-  padding: 10px 12px;
-}
 
 .abuse-table tbody td {
   padding: 10px 12px;
@@ -823,21 +809,15 @@ body.dark .abuse-table tbody tr td:first-child a {
   font-weight: bold;
 }
 
-.csv-table-wrapper {
-  max-height: 300px;
-  overflow-x: auto;    
-  overflow-y: auto;
-  margin: 0 20px;
-  -webkit-overflow-scrolling: touch;
-}
+
 
 #csvTable {
-  border-collapse: separate;    
-  border-spacing: 0;           
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: auto;
   min-width: 100%;
   width: max-content;
-  will-change: transform;       
+  will-change: transform;
 }
 
 #csvTable td a {
@@ -847,18 +827,18 @@ body.dark .abuse-table tbody tr td:first-child a {
 
 #csvTable th,
 #csvTable td {
-  max-width: 200px;       
-  white-space: nowrap;     
+  max-width: 200px;
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 
 #csvTable td.expanded {
-  white-space: normal;   
-  max-width: none;       
-  word-wrap: break-word; 
-  background: #f9f9f9;  
+  white-space: normal;
+  max-width: none;
+  word-wrap: break-word;
+  background: #f9f9f9;
   z-index: 1;
   position: relative;
 }
@@ -868,8 +848,8 @@ body.dark .abuse-table tbody tr td:first-child a {
 }
 
 .csv-table-wrapper::-webkit-scrollbar {
-  height: 10px;   
-  width: 10px;    
+  height: 10px;
+  width: 10px;
 }
 
 .csv-table-wrapper::-webkit-scrollbar-thumb {
@@ -889,14 +869,6 @@ body.dark .csv-table-wrapper::-webkit-scrollbar-track {
   background: #222;
 }
 
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #003366; 
-  color: white;
-  padding: 10px 20px;
-}
 
 .header-left {
   display: flex;
@@ -913,10 +885,374 @@ header {
   white-space: normal !important;
   max-width: none !important;
   word-wrap: break-word;
-  background: #ffffcc; 
+  background: #ffffcc;
   font-weight: normal !important;
 }
+
 body.dark #csvTable td.expanded {
-  background: #333366 !important;  
-  color: #fff !important;          
+  background: #333366 !important;
+  color: #fff !important;
 }
+
+/* ===== Hamburger button ===== */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== Hamburger button (stacked vertically) ===== */
+.hamburger {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  display: inline-flex;
+  flex-direction: column;
+  /* <-- apila en vertical */
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  /* separación entre líneas */
+  cursor: pointer;
+  padding: 0;
+  line-height: 0;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+
+/* ===== Side menu (dropdown-like) ===== */
+.side-menu {
+  position: absolute;
+  top: 56px;
+  /* debajo del header */
+  left: 10px;
+  background: #ffffff;
+  color: #222;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  min-width: 180px;
+  z-index: 1200;
+}
+
+.side-menu .menu-item {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #003366;
+  font-weight: 600;
+}
+
+.side-menu .menu-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode for menu */
+body.dark .side-menu {
+  background: #1c1c1c;
+  color: #e0e0e0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .side-menu .menu-item {
+  color: #fff;
+}
+
+body.dark .side-menu .menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.card {
+  background: #fff;
+  border: 2px solid #004085;
+  border-radius: 10px;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+}
+
+body.dark .card {
+  background: #1c1c1c;
+  border: 2px solid #333;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Simple modal for invalid whitelist ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: none;
+}
+
+.modal__dialog {
+  position: relative;
+  /* necesario para posicionar la X */
+  background: #fff;
+  border-radius: 10px;
+  max-width: 520px;
+  margin: 10vh auto;
+  padding: 16px 16px 20px 16px;
+  border: 2px solid #004085;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  color: #222;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 24px 8px 0;
+  /* deja hueco para la X */
+}
+
+.modal__body {
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.modal__list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.modal__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  /* sin círculo */
+  border: none;
+  color: #0b3c7a;
+  /* azul oscuro */
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.modal__close:hover {
+  opacity: 0.75;
+}
+
+
+/* Dark mode */
+body.dark .modal__dialog {
+  background: #1c1c1c;
+  border-color: #333;
+  color: #fff;
+}
+
+body.dark .modal__close {
+  background: #2e6ebd;
+  color: #fff;
+}
+
+#btnProcess:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+
+
+
+
+
+/* Evita scrolls inesperados en nodos internos */
+.abuse-table,
+.abuse-table thead,
+.abuse-table tbody {
+  overflow: visible;
+}
+
+.abuse-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+
+
+
+.abuse-table thead th:last-child { border-right: none; }
+
+
+.abuse-table td:last-child { border-right: none; }
+
+/* Zebra + hover */
+.abuse-table tbody tr:nth-child(odd)  td { background: #f8fbff; }
+.abuse-table tbody tr:hover td { background: #eef5ff; }
+
+/* Modo oscuro */
+body.dark .csv-table-scroller { background: #121212; border-color: #2b2b2b; }
+body.dark .abuse-table thead { background: #1f2a36; border-bottom-color: #2b3b4f; }
+body.dark .abuse-table thead th { color: #e0e8f5; border-right-color: #333; }
+body.dark .abuse-table td { border-right-color: #333; border-bottom-color: #333; background: #11161d; }
+body.dark .abuse-table tbody tr:nth-child(odd) td { background: #141a22; }
+body.dark .abuse-table tbody tr:hover td { background: #1a2330; }
+
+
+
+
+body.dark .table-controls .page-size select {
+  background: #121212;
+  color: #e0e0e0;
+  border-color: #333;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 14px;                        /* separación entre info y acciones */
+}
+
+.page-info {
+  font-weight: 600;
+  color: #0b3c7a;
+}
+body.dark .page-info { color: #cfe2ff; }
+
+.pager-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pager-link {
+  font-weight: 600;
+  color: #0b3c7a;
+  cursor: pointer;
+  user-select: none;
+}
+.pager-link:hover { text-decoration: underline; }
+.pager-link.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  text-decoration: none !important;
+}
+body.dark .pager-link { color: #cfe2ff; }
+
+
+
+
+/* nos aseguramos de que los controles NO se “peguen” dentro del scroller */
+.table-controls { position: static; margin-top: 8px; }
+
+
+/* === Tabla con header sticky y UN solo scrollbar === */
+.csv-table-wrapper {
+  position: relative;
+  overflow: visible;
+  margin-bottom: 12px;            /* separa tabla de controles */
+}
+
+.csv-table-scroller {
+  display: block;
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 60vh;
+  border: 2px solid #004085;
+  border-radius: 10px;
+  background: #fff;
+  position: relative;             /* crea su propio contexto */
+  z-index: 0;                     /* por debajo de los controles */
+  padding: 0;
+}
+
+.abuse-table { 
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  margin: 0;
+}
+.abuse-table thead, .abuse-table tbody { overflow: visible; }
+
+/* sticky en THEAD (no en cada TH) */
+.abuse-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #eaf2fb;            /* fondo sólido para que no se vea el cuerpo al pasar */
+  border-bottom: 1px solid #004085;
+}
+.abuse-table thead th {
+  position: static;               /* importante: sin sticky individual */
+  color: #0b3c7a;
+  font-weight: 700;
+  padding: 8px 10px;
+  white-space: nowrap;
+  border-right: 1px solid #c9d7eb;
+}
+.abuse-table thead th:last-child { border-right: none; }
+
+.abuse-table td {
+  border-right: 1px solid #c9d7eb;
+  border-bottom: 1px solid #c9d7eb;
+  padding: 8px 10px;
+  vertical-align: top;
+  background: #fff;
+  white-space: nowrap;
+}
+.abuse-table td:last-child { border-right: none; }
+
+.abuse-table tbody tr:nth-child(odd) td { background: #f8fbff; }
+.abuse-table tbody tr:hover td { background: #eef5ff; }
+
+/* === Controles SIEMPRE fuera y por encima del scroller === */
+.table-controls {
+  position: relative;             /* crea stacking context propio */
+  z-index: 3;                     /* por ENCIMA del scroller */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* izq: selector / dcha: info + pager */
+  gap: 16px;
+  margin: 8px 4px 0 4px;
+}
+
+.table-controls .page-size select {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid #004085;
+  background: #fff;
+  color: #0b3c7a;
+}
+
+.pager { display: flex; align-items: center; gap: 14px; }
+.page-info { font-weight: 600; color: #0b3c7a; }
+
+.pager-actions { display: flex; align-items: center; gap: 10px; }
+.pager-link { font-weight: 600; color: #0b3c7a; cursor: pointer; user-select: none; }
+.pager-link:hover { text-decoration: underline; }
+.pager-link.disabled { opacity: .4; pointer-events: none; text-decoration: none !important; }
+
+/* === Dark mode === */
+body.dark .csv-table-scroller { background: #121212; border-color: #2b2b2b; }
+body.dark .abuse-table thead { background: #1f2a36; border-bottom-color: #2b3b4f; }
+body.dark .abuse-table thead th { color: #e0e8f5; border-right-color: #333; }
+body.dark .abuse-table td { border-right-color: #333; border-bottom-color: #333; background: #11161d; }
+body.dark .abuse-table tbody tr:nth-child(odd) td { background: #141a22; }
+body.dark .abuse-table tbody tr:hover td { background: #1a2330; }
+body.dark .table-controls .page-size select { background: #121212; color: #e0e0e0; border-color: #333; }
+body.dark .page-info, body.dark .pager-link { color: #cfe2ff; }

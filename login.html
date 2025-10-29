@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Processor</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body class="login">
+    <!-- Header reutilizable -->
+    <script src="headerLoader.js"></script>
+
+    <main style="max-width:1200px;margin:24px auto;padding:0 16px;">
+        <section class="actions" style="gap:16px; margin-top:10px; grid-template-columns: 1fr 1fr;">
+
+            <div class="card">
+                <h2 style="text-align:center;margin-top:0;">Whitelist (IPs y/o CIDR)</h2>
+                <div style="text-align:center;">
+                    <button id="btnUploadWhitelist" style="margin-top: 10px;">Upload CSV Whitelist</button>
+                    <input type="file" id="fileWhitelist" accept=".csv,text/csv" style="display:none">
+                    <div id="whitelistInfo" style="margin-top:8px; font-size:0.95em; color:#004085;"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="text-align:center;margin-top:0;">Login Attempts</h2>
+                <div style="text-align:center;">
+                    <button id="btnUploadLogins" style="margin-top: 10px;">Upload CSV Logins</button>
+                    <input type="file" id="fileLogins" accept=".csv,text/csv" style="display:none">
+                    <div id="loginsInfo" style="margin-top:8px; font-size:0.95em; color:#004085;"></div>
+                </div>
+            </div>
+
+            <div style="text-align:center; grid-column:1 / -1;">
+                <button id="btnProcess" style="margin-top: 10px;">Process</button>
+            </div>
+
+        </section>
+
+
+        <section id="resultsSection" style="display:none;">
+            <h2 style="text-align:center;">Intentos NO permitidos</h2>
+
+            <div class="csv-table-wrapper">
+                <div class="csv-table-scroller">
+                    <table id="loginResultsTable" class="abuse-table">
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-controls">
+                <div class="page-size">
+                    Show
+                    <select id="pageSizeSelect">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="75">75</option>
+                        <option value="100">100</option>
+                    </select>
+                    entries per page
+                </div>
+
+                <div class="pager">
+                    <span id="pageInfo" class="page-info">Page 1 of 1 (0 rows) — showing 0–0</span>
+                    <div class="pager-actions">
+                        <span id="firstPage" class="pager-link" role="button" aria-label="First">&laquo;</span>
+                        <span id="prevPage" class="pager-link" role="button" aria-label="Previous">&lsaquo;</span>
+                        <span id="nextPage" class="pager-link" role="button" aria-label="Next">&rsaquo;</span>
+                        <span id="lastPage" class="pager-link" role="button" aria-label="Last">&raquo;</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+    <!-- Modal: invalid whitelist entries -->
+    <div id="invalidWhitelistModal" class="modal" style="display:none;">
+        <div class="modal__dialog">
+            <!-- Botón X flotante -->
+            <button id="invalidWhitelistClose" class="modal__close" aria-label="Cerrar">x</button>
+
+
+            <div class="modal__header">
+                <h3 style="margin:0;">Invalid whitelist entries</h3>
+            </div>
+
+            <div class="modal__body">
+                <p>These entries could not be interpreted as IP or CIDR. Please check the CSV:</p>
+                <ul id="invalidWhitelistList" class="modal__list"></ul>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="login.js"></script>
+</body>
+
+</html>

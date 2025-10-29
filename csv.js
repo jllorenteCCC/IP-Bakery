@@ -32,20 +32,20 @@
     }
 
     function extractIP(text) {
-    if (!text) return null;
+        if (!text) return null;
 
-    const ipv4Regex = /\b(?:(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(?:\.(?!$)|$)){4}\b/;
+        const ipv4Regex = /\b(?:(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(?:\.(?!$)|$)){4}\b/;
 
-    const ipv6Regex = /\b(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\b/;
+        const ipv6Regex = /\b(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\b/;
 
-    let match = text.match(ipv4Regex);
-    if (match) return match[0];
+        let match = text.match(ipv4Regex);
+        if (match) return match[0];
 
-    match = text.match(ipv6Regex);
-    if (match) return match[0];
+        match = text.match(ipv6Regex);
+        if (match) return match[0];
 
-    return null;
-}
+        return null;
+    }
 
 
 
@@ -167,25 +167,34 @@
 })();
 
 
-// ========= Dark Mode Toggle =========
-const darkToggle = document.getElementById("darkModeToggle");
 
-chrome.storage.local.get("darkMode", data => {
-    if (data.darkMode) {
-        document.body.classList.add("dark");
-        darkToggle.checked = true;
-    }
-});
+// ========= Dark Mode Toggle (safe) =========
+function wireDarkToggle() {
+    const darkToggle = document.getElementById("darkModeToggle");
+    if (!darkToggle) return; // header aún no insertado
 
-darkToggle.addEventListener("change", () => {
-    if (darkToggle.checked) {
-        document.body.classList.add("dark");
-        chrome.storage.local.set({ darkMode: true });
-    } else {
-        document.body.classList.remove("dark");
-        chrome.storage.local.set({ darkMode: false });
-    }
-});
+    chrome.storage.local.get("darkMode", data => {
+        if (data.darkMode) {
+            document.body.classList.add("dark");
+            darkToggle.checked = true;
+        }
+    });
+
+    darkToggle.addEventListener("change", () => {
+        if (darkToggle.checked) {
+            document.body.classList.add("dark");
+            chrome.storage.local.set({ darkMode: true });
+        } else {
+            document.body.classList.remove("dark");
+            chrome.storage.local.set({ darkMode: false });
+        }
+    });
+}
+
+// Intenta cablear ahora y también tras la inserción del header
+wireDarkToggle();
+document.addEventListener("DOMContentLoaded", wireDarkToggle);
+
 
 document.addEventListener("click", (e) => {
     let td = null;
