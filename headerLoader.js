@@ -16,9 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const isBatchPage = path.includes("popup.html") || path.includes("csv.html");
 
       const tabBatch = document.getElementById("tabBatch");
-      const tabCsv   = document.getElementById("tabCsv");
+      const tabCsv = document.getElementById("tabCsv");
       if (path.includes("popup.html") && tabBatch) tabBatch.classList.add("active");
-      if (path.includes("csv.html")   && tabCsv)   tabCsv.classList.add("active");
+      if (path.includes("csv.html") && tabCsv) tabCsv.classList.add("active");
 
       if (!document.querySelector('script[src="darkmode.js"]')) {
         const darkScript = document.createElement("script");
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Side menu 
-      const menuBtn  = document.getElementById("menuToggle");
+      const menuBtn = document.getElementById("menuToggle");
       const sideMenu = document.getElementById("sideMenu");
 
       function closeMenu() {
@@ -68,37 +68,46 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // Open-in-new-tab logic for menu items
+
       const menuLogin = document.getElementById("menuLogin");
       const menuBatch = document.getElementById("menuBatch");
 
       if (menuLogin) {
-        menuLogin.addEventListener("click", (e) => {
+        menuLogin.addEventListener("click", async (e) => {
           e.preventDefault();
-          if (isLoginPage) { 
-            closeMenu();
-            return;
-          }
-          window.open("login.html", "_blank");
+          if (isLoginPage) { closeMenu(); return; }
+
+          chrome.runtime.sendMessage(
+            { type: "OPEN_OR_FOCUS", primaryPath: "login.html", altPaths: [] },
+            (resp) => {
+              if (!resp || resp.ok !== true) window.open("login.html", "_blank");
+            }
+          );
           closeMenu();
         });
       }
 
       if (menuBatch) {
-        menuBatch.addEventListener("click", (e) => {
+        menuBatch.addEventListener("click", async (e) => {
           e.preventDefault();
+
           if (isBatchPage) {
-            if (!path.includes("popup.html")) {
-              window.location.href = "popup.html";
-            } else {
-              closeMenu(); 
-            }
+            if (!path.includes("popup.html")) window.location.href = "popup.html";
+            closeMenu();
             return;
           }
-          window.open("popup.html", "_blank");
+
+          chrome.runtime.sendMessage(
+            { type: "OPEN_OR_FOCUS", primaryPath: "popup.html", altPaths: ["csv.html"] },
+            (resp) => {
+              if (!resp || resp.ok !== true) window.open("popup.html", "_blank");
+            }
+          );
           closeMenu();
         });
       }
+
+
     })
     .catch((err) => {
       console.error("Header load failed:", err);

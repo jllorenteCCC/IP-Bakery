@@ -41,6 +41,7 @@
   "permissions": [
     "storage",
     "clipboardWrite",
-    "system.display"
+    "system.display",
+    "tabs"
   ]
 }

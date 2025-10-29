@@ -112,23 +112,25 @@ function isValidIPv6(ip) {
 }
 
 // ================= State =================
-let whitelistItems = [];        
-let whitelistCIDRs = [];        
-let whitelistIPs = new Set();   
+let whitelistItems = [];
+let whitelistCIDRs = [];
+let whitelistIPs = new Set();
 let loginHeaders = [];
-let loginRows = [];            
+let loginRows = [];
 
 
-let resultRows = [];   
+let resultRows = [];
 let pageSize = 10;
 let currentPage = 1;
 
+
 const pageSizeSelect = document.getElementById("pageSizeSelect");
-const pageInfoEl     = document.getElementById("pageInfo");
-const firstPageLink  = document.getElementById("firstPage");
-const prevPageLink   = document.getElementById("prevPage");
-const nextPageLink   = document.getElementById("nextPage");
-const lastPageLink   = document.getElementById("lastPage");
+const pageInfoEl = document.getElementById("pageInfo");
+const firstPageLink = document.getElementById("firstPage");
+const prevPageLink = document.getElementById("prevPage");
+const nextPageLink = document.getElementById("nextPage");
+const lastPageLink = document.getElementById("lastPage");
+const copyIpsBtn = document.getElementById("copyIps");
 
 
 let whitelistValid = false;
@@ -224,18 +226,19 @@ function updatePagerUI() {
 
   const pageCount = totalPages;
   const totalRows = total;
+  if (copyIpsBtn) copyIpsBtn.style.display = totalRows ? "inline" : "none";
   const showingFrom = (totalRows === 0) ? 0 : (currentPage - 1) * pageSize + 1;
-  const showingTo   = Math.min(currentPage * pageSize, totalRows);
+  const showingTo = Math.min(currentPage * pageSize, totalRows);
 
   pageInfoEl.textContent = `Page ${currentPage} of ${pageCount} (${totalRows} rows) — showing ${showingFrom}–${showingTo}`;
 
   const atFirst = currentPage <= 1;
-  const atLast  = currentPage >= pageCount;
+  const atLast = currentPage >= pageCount;
 
   togglePagerLink(firstPageLink, !atFirst);
-  togglePagerLink(prevPageLink,  !atFirst);
-  togglePagerLink(nextPageLink,  !atLast);
-  togglePagerLink(lastPageLink,  !atLast);
+  togglePagerLink(prevPageLink, !atFirst);
+  togglePagerLink(nextPageLink, !atLast);
+  togglePagerLink(lastPageLink, !atLast);
 }
 
 function togglePagerLink(el, enabled) {
@@ -275,8 +278,8 @@ function persistPageState() {
 function showResults(headers, rows) {
   loginHeaders = headers.slice();
   renderTableHeader(loginHeaders);
-  currentPage = 1;        
-  renderTableBody(rows);  
+  currentPage = 1;
+  renderTableBody(rows);
   resultsSection.style.display = "block";
 }
 
@@ -480,12 +483,42 @@ if (pageSizeSelect) {
   });
 }
 if (firstPageLink) firstPageLink.addEventListener("click", () => goToPage(1));
-if (prevPageLink)  prevPageLink.addEventListener("click", () => goToPage(currentPage - 1));
-if (nextPageLink)  nextPageLink.addEventListener("click", () => goToPage(currentPage + 1));
-if (lastPageLink)  lastPageLink.addEventListener("click", () => {
+if (prevPageLink) prevPageLink.addEventListener("click", () => goToPage(currentPage - 1));
+if (nextPageLink) nextPageLink.addEventListener("click", () => goToPage(currentPage + 1));
+if (lastPageLink) lastPageLink.addEventListener("click", () => {
   const totalPages = Math.max(1, Math.ceil(resultRows.length / pageSize));
   goToPage(totalPages);
 });
+
+if (copyIpsBtn) {
+  copyIpsBtn.addEventListener("click", async () => {
+    const col = findSourceCol(loginHeaders);
+    if (col === -1) {
+      alert("Column source_ip not found.");
+      return;
+    }
+    const set = new Set();
+    for (const row of resultRows) {
+      const raw = (row[col] ?? "");
+      const ip = extractIP(String(raw));
+      if (ip) set.add(ip);
+    }
+    const text = Array.from(set).join(", ");
+    if (!text) {
+      alert("No IPs to copy.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      const orig = copyIpsBtn.textContent;
+      copyIpsBtn.textContent = "Copied!";
+      setTimeout(() => copyIpsBtn.textContent = orig, 1500);
+    } catch (e) {
+      alert("Could not copy to clipboard.");
+    }
+  });
+}
+
 
 
 
@@ -549,7 +582,7 @@ chrome?.storage?.local?.get?.(
       }
       renderTableHeader(data.loginResultsHeaders);
       resultsSection.style.display = "block";
-      renderTableBody(data.loginResultsRows); 
+      renderTableBody(data.loginResultsRows);
     }
 
 
