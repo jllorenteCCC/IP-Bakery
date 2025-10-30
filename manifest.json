@@ -9,39 +9,21 @@
       "32": "Images/Furnace.png",
       "48": "Images/Furnace.png",
       "128": "Images/Furnace.png"
-    }
+    },
+    "default_title": "IP Bakery"
   },
-  "host_permissions": [
-    "https://*.tile.openstreetmap.org/*",
-    "https://api.abuseipdb.com/*",
-    "http://ip-api.com/*"
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "header.html",
-        "darkmode.js",
-        "popup.css",
-        "Images/*"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
   "background": {
     "service_worker": "background.js"
   },
+  "permissions": ["storage", "clipboardWrite", "system.display", "tabs"],
+  "host_permissions": [
+    "https://*.tile.openstreetmap.org/*",
+    "https://api.abuseipdb.com/*"
+  ],
   "icons": {
     "16": "Images/Furnace.png",
     "32": "Images/Furnace.png",
     "48": "Images/Furnace.png",
     "128": "Images/Furnace.png"
-  },
-  "permissions": [
-    "storage",
-    "clipboardWrite",
-    "system.display",
-    "tabs"
-  ]
+  }
 }
