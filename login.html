@@ -14,7 +14,7 @@
         <section class="actions" style="gap:16px; margin-top:10px; grid-template-columns: 1fr 1fr;">
 
             <div class="card">
-                <h2 style="text-align:center;margin-top:0;">Whitelist (IPs y/o CIDR)</h2>
+                <h2 style="text-align:center;margin-top:0;">Whitelist (IPs and/or CIDR)</h2>
                 <div style="text-align:center;">
                     <button id="btnUploadWhitelist" style="margin-top: 10px;">Upload CSV Whitelist</button>
                     <input type="file" id="fileWhitelist" accept=".csv,text/csv" style="display:none">
@@ -40,6 +40,22 @@
 
         <section id="resultsSection" style="display:none;">
             <h2 style="text-align:center;">Unauthorized Attempts</h2>
+            <div id="loginFilter" class="filter-card">
+                <h3>Filter by:</h3>
+                <div class="filter-row">
+                    <select id="loginFilterColumn">
+                        <option value="">-- Select Column --</option>
+                    </select>
+
+                    <input id="loginFilterValue" type="text" placeholder="Type to filter">
+
+                    <div class="filter-actions">
+                        <button id="loginApplyFilter" type="button">Apply</button>
+                        <button id="loginClearFilter" type="button" class="ghost">Clear</button>
+                    </div>
+                </div>
+
+            </div>
 
             <div class="csv-table-wrapper">
                 <div class="csv-table-scroller">
@@ -101,11 +117,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     <script src="login.js"></script>
 </body>
 

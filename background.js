@@ -1,7 +1,5 @@
-// ---- boot log para verificar que el worker carga ----
 console.log("[IP Bakery] Service worker loaded");
 
-// ---- abrir/enfocar por mensaje (lo que ya usabas) ----
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg?.type !== "OPEN_OR_FOCUS") return;
   const primaryPath = msg.primaryPath || "popup.html";
@@ -10,12 +8,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   return true;
 });
 
-// ---- abrir/enfocar al CLICK del icono ----
 chrome.action.onClicked.addListener(async () => {
   await openOrFocus("popup.html", ["login.html", "csv.html"]);
 });
 
-// ---- función común abrir/enfocar ----
 async function openOrFocus(primaryPath, altPaths) {
   const primaryURL = chrome.runtime.getURL(primaryPath);
   const altURLs = (altPaths || []).map((p) => chrome.runtime.getURL(p));
@@ -23,7 +19,6 @@ async function openOrFocus(primaryPath, altPaths) {
 
   const matches = (u) => !!u && candidates.some((c) => u === c || u.startsWith(c + "#") || u.startsWith(c + "?"));
 
-  // 1) Busca en la ventana actual
   let tabs = await chrome.tabs.query({ currentWindow: true });
   let found = tabs.find((t) => matches(t.url));
   if (found) {
@@ -32,7 +27,6 @@ async function openOrFocus(primaryPath, altPaths) {
     return { ok: true, focused: true, tabId: found.id };
   }
 
-  // 2) Busca en todas las ventanas
   tabs = await chrome.tabs.query({});
   found = tabs.find((t) => matches(t.url));
   if (found) {
@@ -41,7 +35,6 @@ async function openOrFocus(primaryPath, altPaths) {
     return { ok: true, focused: true, tabId: found.id };
   }
 
-  // 3) Crea pestaña nueva
   const created = await chrome.tabs.create({ url: primaryURL, active: true });
   return { ok: true, created: true, tabId: created?.id || null };
 }

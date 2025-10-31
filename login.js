@@ -123,6 +123,16 @@ let resultRows = [];
 let pageSize = 10;
 let currentPage = 1;
 
+let baseRowsAll = [];
+let workingRows = [];
+let currentSort = { col: -1, dir: 0 };
+
+const filterColSel = document.getElementById("loginFilterColumn");
+const filterValInp = document.getElementById("loginFilterValue");
+const applyFilterBtn = document.getElementById("loginApplyFilter");
+const clearFilterBtn = document.getElementById("loginClearFilter");
+
+
 
 const pageSizeSelect = document.getElementById("pageSizeSelect");
 const pageInfoEl = document.getElementById("pageInfo");
@@ -171,12 +181,72 @@ if (modal) {
 // ================= UI helpers =================
 function renderTableHeader(headers) {
   thead.innerHTML = "";
-  headers.forEach(h => {
+  headers.forEach((h, idx) => {
     const th = document.createElement("th");
     th.textContent = h;
+    th.classList.add("sortable");
+    if (currentSort.col === idx && currentSort.dir === 1) th.classList.add("sort-asc");
+    if (currentSort.col === idx && currentSort.dir === -1) th.classList.add("sort-desc");
+    th.addEventListener("click", () => {
+      if (currentSort.col === idx) {
+        currentSort.dir = currentSort.dir === 0 ? 1 : currentSort.dir === 1 ? -1 : 0;
+      } else {
+        currentSort.col = idx; currentSort.dir = 1;
+      }
+      applySortFilterAndRender();
+    });
     thead.appendChild(th);
   });
 }
+
+function applySortFilterAndRender() {
+  let rows = baseRowsAll.slice();
+
+  const colSel = parseInt(filterColSel?.value || "", 10);
+  const q = (filterValInp?.value || "").trim().toLowerCase();
+  if (!isNaN(colSel) && colSel >= 0 && q !== "") {
+    rows = rows.filter(r => String(r[colSel] ?? "").toLowerCase().includes(q));
+  }
+
+  if (currentSort.col >= 0 && currentSort.dir !== 0) {
+    const c = currentSort.col, d = currentSort.dir;
+    rows.sort((a, b) => {
+      const ra = a[c], rb = b[c];
+      const na = ra !== "" && !isNaN(Number(ra));
+      const nb = rb !== "" && !isNaN(Number(rb));
+      if (na && nb) {
+        const va = Number(ra), vb = Number(rb);
+        if (va < vb) return -1 * d;
+        if (va > vb) return 1 * d;
+        return a.__i - b.__i;
+      } else {
+        const va = String(ra ?? "").toLowerCase();
+        const vb = String(rb ?? "").toLowerCase();
+        if (va < vb) return -1 * d;
+        if (va > vb) return 1 * d;
+        return a.__i - b.__i;
+      }
+    });
+  } else {
+    rows.sort((a, b) => a.__i - b.__i);
+  }
+
+
+  workingRows = rows;
+  currentPage = 1;
+  renderTableBody(workingRows);
+  persistResults(loginHeaders, workingRows);
+}
+
+if (applyFilterBtn) applyFilterBtn.addEventListener("click", () => applySortFilterAndRender());
+if (clearFilterBtn) clearFilterBtn.addEventListener("click", () => {
+  if (filterColSel) filterColSel.value = "";
+  if (filterValInp) filterValInp.value = "";
+  currentSort = { col: -1, dir: 0 };
+  applySortFilterAndRender();
+});
+filterValInp?.addEventListener("keydown", (e) => { if (e.key === "Enter") applySortFilterAndRender(); });
+
 
 function renderTableBody(rows) {
   tbody.innerHTML = "";
@@ -267,20 +337,42 @@ function changePageSize(n) {
 }
 
 function persistPageState() {
+  const clean = rows.map(r => {
+    const c = Array.isArray(r) ? r.slice() : r;
+    if (c && typeof c === "object") delete c.__i;
+    return c;
+  });
   chrome?.storage?.local?.set?.({
+    loginResultsHeaders: headers,
+    loginResultsRows: clean,
     loginResultsPageSize: pageSize,
     loginResultsCurrentPage: currentPage
   });
+
 }
 
 
 
 function showResults(headers, rows) {
   loginHeaders = headers.slice();
+  baseRowsAll = rows.map((r, i) => { r.__i = i; return r; });
+  workingRows = baseRowsAll.slice();
+  fillFilterColumns(loginHeaders);
   renderTableHeader(loginHeaders);
   currentPage = 1;
-  renderTableBody(rows);
+  renderTableBody(workingRows);
   resultsSection.style.display = "block";
+}
+
+function fillFilterColumns(headers) {
+  if (!filterColSel) return;
+  filterColSel.innerHTML = '<option value="">-- Select Column --</option>';
+  headers.forEach((h, idx) => {
+    const opt = document.createElement('option');
+    opt.value = String(idx);
+    opt.textContent = h || (`Col ${idx + 1}`);
+    filterColSel.appendChild(opt);
+  });
 }
 
 
@@ -580,9 +672,8 @@ chrome?.storage?.local?.get?.(
       if (Number.isInteger(data.loginResultsCurrentPage)) {
         currentPage = Math.max(1, data.loginResultsCurrentPage);
       }
-      renderTableHeader(data.loginResultsHeaders);
-      resultsSection.style.display = "block";
-      renderTableBody(data.loginResultsRows);
+      showResults(data.loginResultsHeaders, data.loginResultsRows);
+
     }
 
 

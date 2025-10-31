@@ -9,8 +9,8 @@
 
     <!-- Nav -->
     <nav class="top-tabs" id="mainTabs">
-      <a href="popup.html" class="tab" id="tabBatch">IP Batch</a>
-      <a href="csv.html"   class="tab" id="tabCsv">CSV Processor</a>
+      <a href="popup.html" class="tab" id="tabBatch">IP Reputation checker </a>
+      <a href="csv.html" class="tab" id="tabCsv">CSV Processor</a>
     </nav>
   </div>
 
@@ -18,17 +18,16 @@
     <img src="Images/Furnace.png" alt="CCCLogo">
     <div class="darkmode-toggle">
       <!-- Sun -->
-      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        width="18" height="18" fill="white">
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="white">
         <circle cx="12" cy="12" r="5" />
-        <line x1="12" y1="1"  x2="12" y2="4"  stroke="white" stroke-width="2" />
+        <line x1="12" y1="1" x2="12" y2="4" stroke="white" stroke-width="2" />
         <line x1="12" y1="20" x2="12" y2="23" stroke="white" stroke-width="2" />
-        <line x1="1"  y1="12" x2="4"  y2="12" stroke="white" stroke-width="2" />
+        <line x1="1" y1="12" x2="4" y2="12" stroke="white" stroke-width="2" />
         <line x1="20" y1="12" x2="23" y2="12" stroke="white" stroke-width="2" />
         <line x1="4.2" y1="4.2" x2="6.3" y2="6.3" stroke="white" stroke-width="2" />
         <line x1="17.7" y1="17.7" x2="19.8" y2="19.8" stroke="white" stroke-width="2" />
         <line x1="4.2" y1="19.8" x2="6.3" y2="17.7" stroke="white" stroke-width="2" />
-        <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"  stroke="white" stroke-width="2" />
+        <line x1="17.7" y1="6.3" x2="19.8" y2="4.2" stroke="white" stroke-width="2" />
       </svg>
 
       <!-- Switch -->
@@ -38,16 +37,23 @@
       </label>
 
       <!-- Moon -->
-      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="white" width="18" height="18">
-        <path d="M12 2a9.931 9.931 0 0 0-7.07 2.93C7.34 6.34 9 9.02 9 12s-1.66 5.66-4.07 7.07A10 10 0 1 0 12 2z"/>
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18" height="18">
+        <path d="M12 2a9.931 9.931 0 0 0-7.07 2.93C7.34 6.34 9 9.02 9 12s-1.66 5.66-4.07 7.07A10 10 0 1 0 12 2z" />
       </svg>
     </div>
   </div>
 
-    <!-- Side menu -->
-  <nav id="sideMenu" class="side-menu" hidden>
-    <a href="popup.html" class="menu-item" id="menuBatch">IP Batch</a>
-    <a href="login.html" class="menu-item" id="menuLogin">Login Processor</a>
-  </nav>
+  <!-- Side menu -->
+
+  <div id="menuOverlay" class="menu-overlay" hidden></div>
+
+  <aside id="sideDrawer" class="side-drawer" hidden aria-hidden="true">
+    <button id="drawerClose" class="drawer-close" aria-label="Close">×</button>
+
+    <nav class="drawer-nav" aria-label="Main">
+      <a id="menuBatch" class="drawer-link" href="#">IP Reputation Checker</a>
+      <a id="menuLogin" class="drawer-link" href="#">Login Processor</a>
+    </nav>
+  </aside>
+
 </header>

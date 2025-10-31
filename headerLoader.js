@@ -31,41 +31,45 @@ document.addEventListener("DOMContentLoaded", () => {
         tabs.innerHTML = '<a href="login.html" class="tab active" id="tabLogin">Login Processor</a>';
       }
 
-      // Side menu 
       const menuBtn = document.getElementById("menuToggle");
-      const sideMenu = document.getElementById("sideMenu");
+      const drawer = document.getElementById("sideDrawer");
+      const overlay = document.getElementById("menuOverlay");
+      const drawerClose = document.getElementById("drawerClose");
 
-      function closeMenu() {
-        if (!sideMenu) return;
-        sideMenu.hidden = true;
-        if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
-        document.removeEventListener("keydown", escHandler);
-        document.removeEventListener("click", outsideHandler, true);
-      }
-      function escHandler(e) {
-        if (e.key === "Escape") closeMenu();
-      }
-      function outsideHandler(e) {
-        if (!sideMenu.contains(e.target) && e.target !== menuBtn) {
-          closeMenu();
-        }
-      }
-
-      if (menuBtn && sideMenu) {
-        menuBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const isOpen = !sideMenu.hidden;
-          if (isOpen) {
-            closeMenu();
-          } else {
-            sideMenu.hidden = false;
-            menuBtn.setAttribute("aria-expanded", "true");
-            setTimeout(() => {
-              document.addEventListener("keydown", escHandler);
-              document.addEventListener("click", outsideHandler, true);
-            }, 0);
-          }
+      function openDrawer() {
+        if (!drawer || !overlay) return;
+        drawer.hidden = false;
+        overlay.hidden = false;
+        requestAnimationFrame(() => {
+          drawer.classList.add("open");
+          overlay.classList.add("show");
         });
+        document.body.classList.add("drawer-open");
+        menuBtn?.setAttribute("aria-expanded", "true");
+        drawer.setAttribute("aria-hidden", "false");
+        setTimeout(() => drawerClose?.focus(), 50);
+      }
+      function closeDrawer() {
+        if (!drawer || !overlay) return;
+        drawer.classList.remove("open");
+        overlay.classList.remove("show");
+        document.body.classList.remove("drawer-open");
+        menuBtn?.setAttribute("aria-expanded", "false");
+        drawer.setAttribute("aria-hidden", "true");
+        setTimeout(() => { drawer.hidden = true; overlay.hidden = true; }, 280);
+      }
+
+      function onEsc(e) { if (e.key === "Escape") closeDrawer(); }
+      function onOverlayClick(e) { if (e.target === overlay) closeDrawer(); }
+
+      if (menuBtn && drawer && overlay) {
+        menuBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (drawer.classList.contains("open")) { closeDrawer(); } else { openDrawer(); }
+        });
+        overlay.addEventListener("click", onOverlayClick);
+        drawerClose?.addEventListener("click", closeDrawer);
+        document.addEventListener("keydown", onEsc);
       }
 
 
@@ -73,43 +77,34 @@ document.addEventListener("DOMContentLoaded", () => {
       const menuBatch = document.getElementById("menuBatch");
 
       if (menuLogin) {
-        menuLogin.addEventListener("click", async (e) => {
+        menuLogin.addEventListener("click", (e) => {
           e.preventDefault();
-          if (isLoginPage) { closeMenu(); return; }
-
+          if (isLoginPage) { closeDrawer(); return; }
+          closeDrawer(); // cerrar inmediatamente
           chrome.runtime.sendMessage(
             { type: "OPEN_OR_FOCUS", primaryPath: "login.html", altPaths: [] },
-            (resp) => {
-              if (!resp || resp.ok !== true) window.open("login.html", "_blank");
-            }
+            (resp) => { if (!resp || resp.ok !== true) window.open("login.html", "_blank"); }
           );
-          closeMenu();
         });
       }
 
       if (menuBatch) {
-        menuBatch.addEventListener("click", async (e) => {
+        menuBatch.addEventListener("click", (e) => {
           e.preventDefault();
-
           if (isBatchPage) {
+            closeDrawer(); // cerrar igualmente aunque ya estés en sección batch
             if (!path.includes("popup.html")) window.location.href = "popup.html";
-            closeMenu();
             return;
           }
-
+          closeDrawer(); // cerrar inmediatamente
           chrome.runtime.sendMessage(
             { type: "OPEN_OR_FOCUS", primaryPath: "popup.html", altPaths: ["csv.html"] },
-            (resp) => {
-              if (!resp || resp.ok !== true) window.open("popup.html", "_blank");
-            }
+            (resp) => { if (!resp || resp.ok !== true) window.open("popup.html", "_blank"); }
           );
-          closeMenu();
         });
       }
-
-
     })
     .catch((err) => {
-      console.error("Header load failed:", err);
+      console.error("Failed to load header:", err);
     });
 });
